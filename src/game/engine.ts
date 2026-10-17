@@ -481,9 +481,11 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
       writeNum(BEST_KEY, best);
     }
     const steps = Math.floor(score / 100) - Math.floor(before / 100);
-    if (steps > 0 && lives > 0 && phase === "play") {
-      pendingPowers += steps;
-      floater(player.x, player.y - H * 0.07, "rush");
+    if (steps > 0 && lives > 0 && phase === "play" && laserTime <= 0) {
+      laserTime = 10;
+      laserTick = 0;
+      audio.zap();
+      floater(player.x, player.y - H * 0.07, "laser");
     }
     sync();
   }
@@ -1495,7 +1497,7 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
       if (kind === "poop") {
         firePoop();
       } else if (laserTime <= 0) {
-        laserTime = 2.2;
+        laserTime = 10;
         laserTick = 0;
         audio.zap();
       } else {
@@ -1523,7 +1525,7 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
         sync();
       } else if (kind === "laser" && laserLeft > 0 && laserTime <= 0) {
         laserLeft -= 1;
-        laserTime = 3.4;
+        laserTime = 10;
         laserTick = 0;
         audio.zap();
         sync();

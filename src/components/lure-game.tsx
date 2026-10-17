@@ -202,7 +202,7 @@ export function LureGame() {
               <li>Tap to rise. The jump is softer now.</li>
               <li>Eat sharks and little fish. Bigger sharks pay more.</li>
               <li>Dodge jellies and the coral. Catch a falling diver for 500.</li>
-              <li>Every 100 points banks a rush. Tap Laser or Poop when you want it.</li>
+              <li>Every 100 points the lure fires for 10 seconds, then the beam goes out.</li>
               <li>Each minute ends in a man-of-war. Bite it when it glows.</li>
             </ul>
             <button
