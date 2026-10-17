@@ -505,10 +505,10 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
   function lurePos() {
     const visualH = anglerVisualH();
     const { visualW } = sizes("angler", visualH);
-    const sway = Math.sin(time * 4.6) * visualW * 0.55 + Math.sin(time * 2.1) * visualW * 0.2;
-    const bob = Math.cos(time * 5.4) * visualH * 0.7 + Math.sin(time * 3.3) * visualH * 0.35;
-    const lx = visualW * 0.05 + sway;
-    const ly = -visualH * 0.55 + bob;
+    const sway = Math.sin(time * 3.1) * visualW * 0.06;
+    const bob = Math.cos(time * 4.4) * visualH * 0.1;
+    const lx = visualW * 0.04 + sway;
+    const ly = -visualH * 0.28 + bob;
     const c = Math.cos(player.rot);
     const s = Math.sin(player.rot);
     const hx = visualW * 0.02;
@@ -659,7 +659,6 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
     if (weapon === "laser") {
       cool = Math.max(0.4, 0.9 - rank * 0.15);
       beamHit(H * (0.03 + rank * 0.008), rank);
-      laserTick = 0.12;
       audio.zap();
     } else if (weapon === "missile") {
       cool = Math.max(0.45, 1.15 - rank * 0.18);
@@ -888,10 +887,15 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
     banner = Math.max(0, banner - dt);
     if (laserTime > 0) {
       laserTime -= dt;
-      laserTick -= dt;
-      if (laserTick <= 0) {
-        laserTick = 0.16;
-        beamHit(H * 0.07, 1);
+      if (laserTime <= 0) {
+        laserTime = 0;
+        laserTick = 0;
+      } else {
+        laserTick -= dt;
+        if (laserTick <= 0) {
+          laserTick = 0.16;
+          beamHit(H * 0.07, 1);
+        }
       }
     }
 
@@ -1280,19 +1284,6 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
 
     if (mode === "boss") drawBoss();
 
-    const lure = lurePos();
-    const pulse = 0.7 + Math.sin(time * 6) * 0.3;
-    ctx.save();
-    ctx.globalCompositeOperation = "lighter";
-    const glow = ctx.createRadialGradient(lure.x, lure.y, 0, lure.x, lure.y, H * 0.055);
-    glow.addColorStop(0, `rgba(240, 180, 41, ${0.7 * pulse})`);
-    glow.addColorStop(1, "rgba(240, 180, 41, 0)");
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(lure.x, lure.y, H * 0.055, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
     const stretch = clamp(player.vy / (H * 0.8), -0.25, 0.3);
     const img = frameOf("angler", player.anim);
     const alpha = player.iframes > 0 && Math.sin(time * 40) > 0 ? 0.55 : 1;
@@ -1321,20 +1312,10 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
       ctx.restore();
     }
 
-    ctx.strokeStyle = "#f0b429";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(lure.hx, lure.hy);
-    ctx.quadraticCurveTo((lure.hx + lure.x) / 2, lure.hy - H * 0.02, lure.x, lure.y);
-    ctx.stroke();
-    ctx.fillStyle = "#ffe7a3";
-    ctx.beginPath();
-    ctx.arc(lure.x, lure.y, 4 + pulse * 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    if (laserTime > 0 || laserTick > 0) {
+    if (laserTime > 0) {
+      const lure = lurePos();
       ctx.strokeStyle = "rgba(240, 180, 41, 0.9)";
-      ctx.lineWidth = laserTime > 0 ? 8 : 3;
+      ctx.lineWidth = 8;
       ctx.beginPath();
       ctx.moveTo(lure.x, lure.y);
       ctx.lineTo(W + 10, lure.y);
