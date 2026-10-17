@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --color-abyss: #07141c;
+  --color-deep: #163848;
+  --color-foam: #e7f4f0;
+  --color-mist: #a8c4c6;
+  --color-lure: #f0b429;
+  --radius-card: 1.25rem;
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--color-abyss);
+    color: var(--color-foam);
+    overscroll-behavior: none;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lure-card {
+    animation: none;
+  }
+}
+
+@utility lure-panel {
+  max-height: 74dvh;
+  overflow: auto;
+}
