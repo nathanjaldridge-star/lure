@@ -1,6 +1,7 @@
 node_modules
 .vercel
 dist
+dist-pages
 artifacts
 screenshots
 .env
