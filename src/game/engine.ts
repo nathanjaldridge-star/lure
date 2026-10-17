@@ -472,10 +472,8 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
     });
   }
 
-  function maybeOpenPower() {
-    if (lives <= 0 || pendingPowers <= 0 || paused) return;
-    if (phase === "play") phase = "power";
-  }
+  let bonusDue = 0;
+
   function addScore(pts: number) {
     if (pts <= 0) return;
     const before = score;
@@ -485,9 +483,32 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
       writeNum(BEST_KEY, best);
     }
     const steps = Math.floor(score / 100) - Math.floor(before / 100);
-    if (steps > 0) pendingPowers += steps;
-    maybeOpenPower();
+    if (steps > 0 && lives > 0) bonusDue += steps;
     sync();
+  }
+
+  function applyBonuses() {
+    if (phase !== "play" || lives <= 0) return;
+    let guard = 0;
+    while (bonusDue > 0 && guard < 4) {
+      guard += 1;
+      const steps = bonusDue;
+      bonusDue = 0;
+      let poops = 0;
+      for (let i = 0; i < steps; i++) {
+        if (i % 2 === 0) {
+          laserTime += 3.2;
+          laserTick = 0;
+        } else poops += 1;
+      }
+      audio.zap();
+      floater(player.x, player.y - H * 0.07, "bonus");
+      if (poops > 0) {
+        firePoop();
+        if (poops > 1) poopLeft += poops - 1;
+      }
+      sync();
+    }
   }
 
   function mouthPos() {
@@ -878,7 +899,7 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
       return;
     }
 
-    if (paused || phase === "power" || phase === "upgrade" || phase === "results") return;
+    if (paused || phase === "upgrade" || phase === "results") return;
     if (!player.alive && phase === "play") return;
 
     const scroll = scrollSpeed();
@@ -1101,6 +1122,8 @@ export function mountLure(canvas: HTMLCanvasElement): LureApi {
         }
       }
     }
+
+    applyBonuses();
 
     if (Math.floor(runTime) !== hud.time) sync();
   }

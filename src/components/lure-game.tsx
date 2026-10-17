@@ -60,7 +60,7 @@ export function LureGame() {
         </div>
       )}
 
-      {hud.phase === "play" || hud.phase === "power" ? (
+      {hud.phase === "play" ? (
         <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
           <div>
             <p className="font-display text-4xl leading-none text-lure tabular-nums" aria-live="polite">
@@ -150,30 +150,6 @@ export function LureGame() {
         </div>
       )}
 
-      {hud.phase === "power" && (
-        <div className="absolute inset-0 grid place-items-center bg-abyss/60 px-4" data-ui>
-          <section className="lure-card w-full max-w-md rounded-card border border-foam/15 bg-deep/95 p-6 text-center">
-            <p className="text-sm tracking-widest text-lure uppercase">Every hundred</p>
-            <h2 className="mt-1 font-display text-4xl text-foam">Pick a rush</h2>
-            <p className="mt-2 text-mist">
-              {hud.pendingPowers > 1 ? `${hud.pendingPowers} charges. The first one fires now.` : "It fires as soon as you choose."}
-            </p>
-            <button
-              className="mt-5 h-12 w-full rounded-full bg-lure text-lg font-semibold text-abyss"
-              onClick={() => gameRef.current?.choosePower("laser")}
-            >
-              Laser from the lure
-            </button>
-            <button
-              className="mt-3 h-12 w-full rounded-full border border-foam/20 text-lg text-foam"
-              onClick={() => gameRef.current?.choosePower("poop")}
-            >
-              Poop. Clears the screen.
-            </button>
-          </section>
-        </div>
-      )}
-
       {hud.phase === "upgrade" && (
         <div className="absolute inset-0 grid place-items-end justify-center bg-abyss/45 px-4 pb-[max(1rem,env(safe-area-inset-bottom))]" data-ui>
           <section className="lure-card lure-panel w-full max-w-md rounded-card border border-foam/15 bg-deep/95 p-6">
@@ -210,7 +186,7 @@ export function LureGame() {
               <li>Tap to rise. The jump is softer now.</li>
               <li>Eat sharks and little fish. Bigger sharks pay more.</li>
               <li>Dodge jellies and the coral. Catch a falling diver for 500.</li>
-              <li>Every 100 points, pick a laser or a screen-clearing poop.</li>
+              <li>Every 100 points you get a bonus and you keep swimming.</li>
               <li>Each minute ends in a man-of-war. Bite it when it glows.</li>
             </ul>
             <button
