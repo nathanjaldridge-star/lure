@@ -104,7 +104,7 @@ export function LureGame() {
         </div>
       )}
 
-      {hud.phase === "play" && (hud.weapon || hud.laserLeft > 0 || hud.poopLeft > 0) && (
+      {hud.phase === "play" && (hud.weapon || hud.laserLeft > 0 || hud.poopLeft > 0 || hud.pendingPowers > 0) && (
         <div
           className="absolute inset-x-0 bottom-0 flex justify-center gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
           data-ui
@@ -116,6 +116,22 @@ export function LureGame() {
             >
               {hud.weapon === "laser" ? "Laser" : hud.weapon === "missile" ? "Missile" : "Bomb"} {hud.weaponRank}
             </button>
+          )}
+          {hud.pendingPowers > 0 && (
+            <>
+              <button
+                className="h-12 rounded-full border border-foam/20 px-4 text-base text-foam"
+                onClick={() => gameRef.current?.choosePower("laser")}
+              >
+                Laser {hud.pendingPowers}
+              </button>
+              <button
+                className="h-12 rounded-full border border-foam/20 px-4 text-base text-foam"
+                onClick={() => gameRef.current?.choosePower("poop")}
+              >
+                Poop {hud.pendingPowers}
+              </button>
+            </>
           )}
           {hud.laserLeft > 0 && (
             <button
@@ -186,7 +202,7 @@ export function LureGame() {
               <li>Tap to rise. The jump is softer now.</li>
               <li>Eat sharks and little fish. Bigger sharks pay more.</li>
               <li>Dodge jellies and the coral. Catch a falling diver for 500.</li>
-              <li>Every 100 points you get a bonus and you keep swimming.</li>
+              <li>Every 100 points banks a rush. Tap Laser or Poop when you want it.</li>
               <li>Each minute ends in a man-of-war. Bite it when it glows.</li>
             </ul>
             <button
